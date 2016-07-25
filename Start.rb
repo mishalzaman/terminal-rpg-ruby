@@ -8,9 +8,18 @@ require 'string'
 require 'map'
 
 quit = false
-mode = 'movement' # movement or command
+@mode = 'movement' # movement or command
 
 map = Map.new("map")
+
+def display_mode_information
+	case @mode
+		when "movement"
+			puts "move".bg_green
+		when "command"
+			puts "command".bg_magenta
+	end
+end
 
 # main loop
 while quit == false
@@ -21,7 +30,7 @@ while quit == false
 	# 		around the map using the wasd keys
 	# 	command:
 	# 		Where commands are typed by hte player 
-	if mode == "movement"
+	if @mode == "movement"
 		move = STDIN.getch
 	
 		case move
@@ -36,14 +45,14 @@ while quit == false
 			when 'w'
 				map.player_move('up')
 			when 'c'
-				mode = "command"
+				@mode = "command"
 		end
 	else 
 		command = gets.chomp
 
 		case command
 			when 'move'
-				mode = "movement"
+				@mode = "movement"
 			when 'q'
 				quit = true
 		end 
@@ -51,5 +60,8 @@ while quit == false
 
 	system "clear" or system "cls"
 	map.draw_map
+	display_mode_information
 end
+
+
 
