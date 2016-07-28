@@ -1,0 +1,3 @@
+class Interact
+
+end

@@ -2,15 +2,9 @@ require 'json'
 
 class Map
     def initialize(map_name)
-        
         # loads map data from json file.
-        # Has properties:
-        #   map = map array
-        #   width = width of the map
-        #   height = height of the map
-        #   player_x = player's x position
-        #   player_y = player's y position
         @data = load_map(map_name)
+        @camera_range = 20
 
         system "clear" or system "cls"
 
@@ -18,17 +12,13 @@ class Map
     end
 
     def draw_map
-        # get camera view
-        views = camera
+        clear_terminal
 
-        puts views
-        # array range @data["map"][0..9]...
+        @data["map"][get_camera_range("y", "down")..get_camera_range("y", "up")].each_with_index do | y, index_y |
+            y[get_camera_range("x", "down")..get_camera_range("x", "up")].each_with_index do | x, index_x |
 
-        @data["map"].each_with_index do | y, index_y |
-            y.each_with_index do | x, index_x |
                 # Add player position
-                if @data["player_x"] == index_x && @data["player_y"] == index_y
-                    player
+                if display_player(index_x, index_y)
                     next
                 end
 
@@ -41,68 +31,7 @@ class Map
 
             print "\n"
         end     
-    end
 
-    def camera
-        p_x = @data["player_x"]
-        p_y = @data["player_y"]
-        views = {}
-
-        digits_x = Math.log10(p_x).floor.downto(0).map { |i| (p_x / 10**i) % 10 }
-        digits_y = Math.log10(p_y).floor.downto(0).map { |i| (p_y / 10**i) % 10 }
-
-        # x axis
-        if digits_x.count == 1
-            min_x = 0
-            max_x = 9
-        else
-            tenth_x = digits_x[digits_x.count-2]
-            min_x = tenth_x*10
-            max_x = ((tenth_x+1)*10)-1
-        end
-
-        if digits_y.count == 1
-            min_y = 0
-            max_y = 9
-        else
-            tenth_y = digits_y[digits_y.count-2]
-            min_y = tenth_y*10
-            max_y = ((tenth_y+1)*10)-1          
-        end
-
-        views = {
-            "min_x" => min_x,
-            "max_x" => max_x,
-            "min_y" => min_y,
-            "max_y" => max_y
-        }
-
-        return views
-
-    end
-
-    def display_tiles(x)
-        case x
-            when 0
-                sea
-            when 1
-                grass
-            when 2
-                sand
-        end        
-    end
-
-    def display_user_status(index_y)
-        case index_y
-            when 0
-                print " World Map"
-            when 1
-                print " ---------"
-            when 2
-                print " player location: #{@data['player_x']}, #{@data['player_y']}"
-            when 3
-                print " Current tile: #{@data['map'][@data['player_y']][@data['player_x']] }"
-        end
     end
 
     def player_move(dir)
@@ -130,26 +59,128 @@ class Map
         end  
     end
 
+    def get_map_data
+        return @data
+    end
+
     private
+    # CAMERA
+    # ------
 
-        def player
-            print "#|".bold.bg_gray
+    # returns a value that is rounded down or up to the nearest camera range 
+    # limiter set by the @camera_range value
+    # e.g. if value is 26 and camera range is 20. Then the min value would
+    # by 20, and maximum would be 30
+    def get_camera_range(axis, direction)
+        player = axis == "x" ? @data["player_x"] : @data["player_y"]
+
+        if direction == "down"
+            return player - player % @camera_range
+        else
+            return ((@camera_range - player % @camera_range) + player) - 1
+        end
+    end
+
+    # DISPLAY
+    # -------
+
+    # Draws the player tile on the map based on the tile index view
+    def display_player(index_x, index_y)
+        x = @data["player_x"] - get_camera_range("x", "down")
+        y = @data["player_y"] - get_camera_range("y", "down")
+
+
+        if x == index_x && y == index_y
+            player
+            return true
         end
 
-        def sea
-            print "  ".bg_blue
-        end
+        return false
+    end
 
-        def grass
-            print "  ".bg_green
-        end
+    def display_tiles(x)
+        case x
+            when 0
+                sea
+            when 1
+                earth
+            when 2
+                wall
+            when 3
+                sand
+            when 4
+                bush
+            when 5
+                bridge
+            when 6
+                floor
+            when 7
+                window
+            when 8
+                sign_post
+        end        
+    end
 
-        def sand
-            print "  ".bg_yellow
+    def display_user_status(index_y)
+        case index_y
+            when 0; print " World Map"
+            when 1; print " ---------"
+            when 2; print " player location: #{@data['player_x']}, #{@data['player_y']}"
+            when 3; print " Current tile: #{@data['map'][@data['player_y']][@data['player_x']] }"
+            when 4; print " camera range y: down=#{get_camera_range('y', 'down')}, up=#{get_camera_range('y', 'up')}"
+            when 5; print " camera range x: down=#{get_camera_range('x', 'down')}, up=#{get_camera_range('x', 'up')}"
         end
+    end
 
+    def player 
+        print "Pr".bold.bg_gray 
+    end
+
+    def sea 
+        print "  ".bg_blue
+    end
+
+    def earth 
+        print "//".blue.bg_green
+    end
+
+    def wall
+        print "!!".brown.bg_black
+    end
+
+    def sand 
+        print "  ".bg_yellow
+    end
+
+    def bush
+        print "|/".brown.bg_green
+    end
+
+    def bridge
+        print "==".magenta.bg_yellow
+    end
+
+    def floor
+        print "..".gray.bg_yellow
+    end
+
+    def window
+        print "//".gray.bg_blue
+    end
+
+    def sign_post
+        print "|#".bg_green
+    end
+
+    # LOAD MAP
+    # --------
+    # Load map data from a JSON file
         def load_map(map_name)
-            file = File.read("assets/#{map_name}.json")
+            if File.file?("assets/maps/#{map_name}") == true
+                file = File.read("assets/maps/#{map_name}")
+            else 
+                file = File.read("assets/save/#{map_name}")
+            end
 
             begin
                 return JSON.parse(file)
@@ -158,43 +189,51 @@ class Map
             end
         end
 
-        def is_player_collision(axis, value)
-            # Check if player is outside the map bounds
-            if is_map_boundary(axis, value)
-                return true
-            end
-
-            # check what the next tile is 
-            if is_valid_tile(axis, value)
-                return true
-            end
-
-            return false
+    # COLLISION DETECTION
+    # -------------------
+    # Perform collision detection tests
+    # Return true for collision detection
+    def is_player_collision(axis, value)
+        # Check if player is outside the map bounds
+        if is_map_boundary(axis, value)
+            return true
         end
 
-        def is_map_boundary(axis, value)
-            if value < 0
+        # check what the next tile is 
+        if is_valid_tile(axis, value)
+            return true
+        end
+
+        return false
+    end
+
+    def is_map_boundary(axis, value)
+        if value < 0
+            return true
+        end
+
+        case axis
+            when 'x'
+                return value > @data['width'] ? true : false
+            when 'y'
+                return value > @data['height'] ? true : false
+            else
                 return true
-            end
-
-            case axis
-                when 'x'
-                    return value > @data['width'] ? true : false
-                when 'y'
-                    return value > @data['height'] ? true : false
-                else
-                    return true
-            end
         end
+    end
 
-        def is_valid_tile(axis, value)
-            case axis
-                when 'x'
-                    return @data['map'][@data['player_y']][value] == 0 ? true : false
-                when 'y'
-                    return @data['map'][value][@data['player_x']] == 0 ? true : false
-                else
-                    return true
-            end     
-        end
+    def is_valid_tile(axis, value)
+        case axis
+            when 'x'
+                return @data['map'][@data['player_y']][value] == 0 ? true : false
+            when 'y'
+                return @data['map'][value][@data['player_x']] == 0 ? true : false
+            else
+                return true
+        end     
+    end
+
+    def clear_terminal
+        system "clear" or system "cls"
+    end
 end
