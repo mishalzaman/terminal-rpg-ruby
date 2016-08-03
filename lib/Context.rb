@@ -15,13 +15,4 @@ class Context
   def switch_context(context)
     @context = context
   end
-
-  def display_context_information
-    case @context
-      when "movement"
-        puts "move".bg_green
-      when "command"
-        puts "command".bg_magenta
-    end
-  end
 end

@@ -29,7 +29,6 @@ class Game
       case @context.get_context
         when "movement"
           move = STDIN.getch.chr
-          puts move
 
           case move
             when 'q'
@@ -93,8 +92,6 @@ class Game
           @menu.draw_menu
         when "interact"
       end     
-
-      @context.display_context_information
     end
 
     quit
