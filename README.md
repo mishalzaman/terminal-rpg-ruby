@@ -4,7 +4,7 @@
 
 Learning Ruby and decided to create a game sort of thing on a terminal. All this application does is display a
 map which is read from a JSON file. The map has some basic collision detection with a player character (Pr) that
-can move around it.
+can move around it. It also allows you to save your position I.e. create a save game.
 
 In the future I will add other features to it, such as having a purpose. Ha!
 
@@ -19,3 +19,17 @@ To run the game, cd in the directory and ...
     ruby Game.rb
 
 I tested this on a mac. It should work in a Windows Environment, but might be a bit slow. I only tested on a windows VM, so that could it?
+
+## Controls
+
+`w` Up
+
+`d` Right
+
+`s` Down
+
+`a` Left
+
+`tab` Menu
+
+`enter` Confirm action in menu
