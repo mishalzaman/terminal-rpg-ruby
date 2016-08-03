@@ -25,9 +25,6 @@ class Map
 
                 # Add tile
                 display_tiles(x)
-
-                # display player interaction information
-                get_player_tile
             end
 
             # display map information
@@ -100,28 +97,6 @@ class Map
         end
 
         return false
-    end
-
-    def get_player_tile
-        p_x = @data["player_x"]
-        p_y = @data["player_y"]
-
-        player_location = @data["map"][p_y][p_x]
-
-        case player_location
-            when 1
-                @interaction = " on grass"
-            when 3
-                @interaction = " on sand"
-            when 4
-                @interaction = " in a bush"
-            when 5
-                @interaction = " on a bridge"
-            when 8
-                @interaction = @data["interactions"]["signpost"]["#{p_y},#{p_x}"]
-            else
-                @interaction = ""
-        end
     end
 
     def display_tiles(x)
