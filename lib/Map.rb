@@ -112,11 +112,11 @@ class Map
             when 1
                 @interaction = " on grass"
             when 3
-                @interaction = "on sand"
+                @interaction = " on sand"
             when 4
-                @interaction = "in a bush"
+                @interaction = " in a bush"
             when 5
-                @interaction = "on a bridge"
+                @interaction = " on a bridge"
             when 8
                 @interaction = @data["interactions"]["signpost"]["#{p_y},#{p_x}"]
             else
