@@ -1,5 +1,7 @@
 # Tile Map in a Terminal
 
+![tile map game](https://raw.githubusercontent.com/mishalzaman/terminal-rpg-ruby/master/rpg-tile.png)
+
 Learning Ruby and decided to create a game sort of thing on a terminal. All this application does is display a
 map which is read from a JSON file. The map has some basic collision detection with a player character (Pr) that
 can move around it.
