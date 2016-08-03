@@ -7,6 +7,7 @@ class Menu
 		@load_files = Dir.entries("assets/save").select {|f| !File.directory? f}
 	end
 
+	# Draw
 	def draw_menu
 		clear_terminal
 		@menu_items.each_with_index do |k, index|
@@ -18,6 +19,7 @@ class Menu
 		end
 	end	
 
+	# Menu user interaction
 	def move_cursor(direction)
 		case direction
 			when "down"
@@ -37,12 +39,18 @@ class Menu
 		end				
 	end
 
+	def reset_selected
+		@selected = 0
+	end
+
+	# Save functonality
 	def save(data)
 		File.open("assets/save/save.json", "w+") do |f|
 			f.puts(data)
 		end
 	end
 
+	# Load functionality
 	def can_load
 		if @load_files.count > 0
 			return true
@@ -53,10 +61,6 @@ class Menu
 
 	def load
 		return "save.json"
-	end
-
-	def reset_selected
-		@selected = 0
 	end
 
     def clear_terminal

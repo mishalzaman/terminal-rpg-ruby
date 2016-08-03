@@ -5,6 +5,7 @@ class Map
         # loads map data from json file.
         @data = load_map(map_name)
         @camera_range = 20
+        @interaction = ""
 
         system "clear" or system "cls"
 
@@ -24,6 +25,9 @@ class Map
 
                 # Add tile
                 display_tiles(x)
+
+                # display player interaction information
+                get_player_tile
             end
 
             # display map information
@@ -91,11 +95,33 @@ class Map
 
 
         if x == index_x && y == index_y
-            player
+            player 
             return true
         end
 
         return false
+    end
+
+    def get_player_tile
+        p_x = @data["player_x"]
+        p_y = @data["player_y"]
+
+        player_location = @data["map"][p_y][p_x]
+
+        case player_location
+            when 1
+                @interaction = " on grass"
+            when 3
+                @interaction = "on sand"
+            when 4
+                @interaction = "in a bush"
+            when 5
+                @interaction = "on a bridge"
+            when 8
+                @interaction = @data["interactions"]["signpost"]["#{p_y},#{p_x}"]
+            else
+                @interaction = ""
+        end
     end
 
     def display_tiles(x)
@@ -127,8 +153,7 @@ class Map
             when 1; print " ---------"
             when 2; print " player location: #{@data['player_x']}, #{@data['player_y']}"
             when 3; print " Current tile: #{@data['map'][@data['player_y']][@data['player_x']] }"
-            when 4; print " camera range y: down=#{get_camera_range('y', 'down')}, up=#{get_camera_range('y', 'up')}"
-            when 5; print " camera range x: down=#{get_camera_range('x', 'down')}, up=#{get_camera_range('x', 'up')}"
+            when 4; print @interaction
         end
     end
 
@@ -223,11 +248,13 @@ class Map
     end
 
     def is_valid_tile(axis, value)
+        cannot_traverse = [0,2,7]
+
         case axis
             when 'x'
-                return @data['map'][@data['player_y']][value] == 0 ? true : false
+                return cannot_traverse.include? @data['map'][@data['player_y']][value] 
             when 'y'
-                return @data['map'][value][@data['player_x']] == 0 ? true : false
+                return cannot_traverse.include? @data['map'][value][@data['player_x']]
             else
                 return true
         end     

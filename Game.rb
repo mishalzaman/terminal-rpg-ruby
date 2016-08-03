@@ -8,14 +8,12 @@ require 'string'
 require 'map'
 require 'context'
 require 'menu'
-require 'load'
 
 class Game
 	def initialize
 		@map = Map.new("map.json")
 		@context = Context.new
 		@menu = Menu.new
-		@load = Load.new
 
 		@quit = false
 
@@ -34,6 +32,8 @@ class Game
 					puts move
 
 					case move
+						when 'q'
+							@quit = true
 						when 'd'
 							@map.player_move('right')
 						when 's'
