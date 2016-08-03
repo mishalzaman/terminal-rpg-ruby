@@ -18,7 +18,7 @@ To run the game, cd in the directory and ...
 
     ruby Game.rb
 
-I tested this on a mac. It should work in a Windows Environment, but might be a bit slow. I only tested on a windows VM, so that could it?
+I tested this on a mac. It should work in a Windows Environment, but might be a bit slow. I only tested on a windows VM, so that could be it?
 
 ## Controls
 
