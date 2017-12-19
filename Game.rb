@@ -4,10 +4,10 @@
 $LOAD_PATH.unshift( File.join( File.dirname(__FILE__), 'lib' ) )
 
 require 'io/console'
-require 'string'
-require 'map'
-require 'context'
-require 'menu'
+require_relative 'lib/String'
+require_relative 'lib/Map'
+require_relative 'lib/Context'
+require_relative 'lib/Menu'
 
 class Game
   def initialize
