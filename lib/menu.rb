@@ -1,4 +1,4 @@
-class MenuView
+class Menu
   def initialize
     @save_file_directory = "assets/save"
     @selected = 0

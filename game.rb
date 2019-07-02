@@ -4,16 +4,16 @@
 $LOAD_PATH.unshift( File.join( File.dirname(__FILE__), 'lib' ) )
 
 require 'io/console'
-require_relative 'lib/string_mp'
-require_relative 'lib/map_view'
-require_relative 'lib/context_rpg'
-require_relative 'lib/menu_view'
+require_relative 'lib/string'
+require_relative 'lib/map'
+require_relative 'lib/context'
+require_relative 'lib/menu'
 
-class TerminalRPG
+class Game
   def initialize
-    @map = MapView.new("map.json")
-    @context = ContextRPG.new
-    @menu = MenuView.new
+    @map = Map.new("map.json")
+    @context = Context.new
+    @menu = Menu.new
 
     @quit = false
 
@@ -62,7 +62,7 @@ class TerminalRPG
             when "\r"
               case @menu.move_cursor("select")
                 when "New"
-                  @map = MapView.new("map.json")
+                  @map = Map.new("map.json")
                   @map.draw_map
                   @context.switch_context("movement")
                   next
@@ -72,7 +72,7 @@ class TerminalRPG
                   next
                 when "Load"
                   if @menu.can_load == true
-                    @map = MapView.new(@menu.load)
+                    @map = Map.new(@menu.load)
                     @context.switch_context("movement")
                     @map.draw_map
                   else
@@ -102,4 +102,4 @@ class TerminalRPG
   end
 end
 
-TerminalRPG.new
+Game.new

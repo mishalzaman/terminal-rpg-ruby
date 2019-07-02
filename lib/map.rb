@@ -1,6 +1,6 @@
 require 'json'
 
-class MapView
+class Map
     def initialize(map_name)
         # loads map data from json file.
         @data = load_map(map_name)
@@ -135,7 +135,7 @@ class MapView
     end
 
     def player 
-        print "Pr".bold.bg_gray 
+        print "Pr".cyan 
     end
 
     def sea 
@@ -143,7 +143,7 @@ class MapView
     end
 
     def earth 
-        print "//".blue.bg_green
+        print [true, false].sample ? ",/".blue.bg_green : "/,".blue.bg_green
     end
 
     def wall
