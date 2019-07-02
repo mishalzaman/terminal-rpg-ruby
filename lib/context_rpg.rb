@@ -3,7 +3,7 @@
 # command - When user needs to type in a string
 # menu - Menu mode
 
-class Context
+class ContextRPG
   def initialize
     @context = "movement"
   end

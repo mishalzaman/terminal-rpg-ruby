@@ -1,11 +1,10 @@
 require 'json'
 
-class Map
+class MapView
     def initialize(map_name)
         # loads map data from json file.
         @data = load_map(map_name)
         @camera_range = 20
-        @interaction = ""
 
         system "clear" or system "cls"
 
@@ -124,11 +123,14 @@ class Map
 
     def display_user_status(index_y)
         case index_y
-            when 0; print " World Map"
+            when 0; print " World Map".blue
             when 1; print " ---------"
             when 2; print " player location: #{@data['player_x']}, #{@data['player_y']}"
             when 3; print " Current tile: #{@data['map'][@data['player_y']][@data['player_x']] }"
-            when 4; print @interaction
+            when 4; print ""
+            when 5; print " Controls:".blue
+            when 6; print " [w] = up, [d] = right, [s] = down, [a] = left".green
+            when 7; print " [tab] = menu, [q] = quit".green
         end
     end
 
